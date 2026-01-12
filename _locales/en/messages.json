@@ -1,0 +1,18 @@
+{
+  "extensionName": {
+    "message": "Email Reminders",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Set reminders for emails with Outlook-style notifications",
+    "description": "Description of the extension"
+  },
+  "setReminder": {
+    "message": "Set Reminder...",
+    "description": "Context menu item text"
+  },
+  "reminderNotificationTitle": {
+    "message": "Email Reminder",
+    "description": "Title for reminder notifications"
+  }
+}

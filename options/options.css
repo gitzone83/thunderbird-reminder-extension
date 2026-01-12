@@ -1,0 +1,133 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  background: #f5f5f5;
+  padding: 40px;
+}
+
+.options-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  color: #333;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.option-section {
+  margin-bottom: 32px;
+}
+
+.option-section h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #444;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.option-row label {
+  flex: 1;
+  color: #555;
+}
+
+.option-row select,
+.option-row input[type="time"] {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.option-row select:focus,
+.option-row input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.danger-zone {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #ffcdd2;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+button.primary {
+  background: #1976d2;
+  border: 1px solid #1976d2;
+  color: #fff;
+}
+
+button.primary:hover {
+  background: #1565c0;
+}
+
+button.secondary {
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #555;
+}
+
+button.secondary:hover {
+  background: #f5f5f5;
+}
+
+button.danger {
+  background: #fff;
+  border: 1px solid #ffcdd2;
+  color: #c62828;
+}
+
+button.danger:hover {
+  background: #ffebee;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #eee;
+}
+
+.save-status {
+  font-size: 13px;
+  color: #4caf50;
+}
+
+.save-status.error {
+  color: #c62828;
+}

@@ -1,0 +1,32 @@
+# Package files
+*.xpi
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+
+# Node (if adding build tools later)
+node_modules/
+package-lock.json
+
+# Test coverage
+coverage/
+
+# Local development
+.env
+.env.local

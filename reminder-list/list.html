@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>All Reminders - Email Reminders</title>
+  <link rel="stylesheet" href="list.css">
+</head>
+<body>
+  <div class="page-container">
+    <header>
+      <h1>Email Reminders</h1>
+      <div class="header-actions">
+        <select id="filterStatus">
+          <option value="active">Active Reminders</option>
+          <option value="all">All Reminders</option>
+          <option value="pending">Pending</option>
+          <option value="completed">Completed</option>
+          <option value="dismissed">Dismissed</option>
+        </select>
+      </div>
+    </header>
+
+    <main>
+      <div id="loading" class="loading">Loading reminders...</div>
+
+      <div id="empty-state" class="empty-state hidden">
+        <h2>No reminders found</h2>
+        <p>Right-click an email in your inbox and select "Set Reminder..." to get started.</p>
+      </div>
+
+      <div id="reminders-container" class="reminders-container hidden">
+        <table class="reminders-table">
+          <thead>
+            <tr>
+              <th class="col-status">Status</th>
+              <th class="col-subject">Subject</th>
+              <th class="col-sender">From</th>
+              <th class="col-due">Due</th>
+              <th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="reminders-tbody"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <footer>
+      <p>Email Reminders Extension v0.1.0</p>
+    </footer>
+  </div>
+
+  <script src="list.js"></script>
+</body>
+</html>

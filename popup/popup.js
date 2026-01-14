@@ -2,6 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
   await loadReminders();
+  await loadStats();
 
   document.getElementById("viewAllBtn").addEventListener("click", async () => {
     await browser.tabs.create({
@@ -10,6 +11,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.close();
   });
 });
+
+async function loadStats() {
+  try {
+    const counts = await browser.runtime.sendMessage({ action: "getReminderCounts" });
+    updateStatsDisplay(counts);
+  } catch (error) {
+    console.error("Error loading stats:", error);
+  }
+}
+
+function updateStatsDisplay(counts) {
+  const statsEl = document.getElementById("stats");
+
+  // Update each count
+  statsEl.querySelector(".stat.pending .count").textContent = counts.pending;
+  statsEl.querySelector(".stat.snoozed .count").textContent = counts.snoozed;
+  statsEl.querySelector(".stat.notified .count").textContent = counts.notified;
+  statsEl.querySelector(".stat.completed .count").textContent = counts.completed;
+  statsEl.querySelector(".stat.dismissed .count").textContent = counts.dismissed;
+
+  // Show stats if there are any reminders
+  if (counts.total > 0) {
+    statsEl.classList.remove("hidden");
+  } else {
+    statsEl.classList.add("hidden");
+  }
+}
 
 async function loadReminders() {
   const loadingEl = document.getElementById("loading");
@@ -175,16 +203,19 @@ function createReminderItem(reminder) {
 async function snoozeReminder(id, minutes) {
   await browser.runtime.sendMessage({ action: "snoozeReminder", id, minutes });
   await loadReminders();
+  await loadStats();
 }
 
 async function completeReminder(id) {
   await browser.runtime.sendMessage({ action: "completeReminder", id });
   await loadReminders();
+  await loadStats();
 }
 
 async function dismissReminder(id) {
   await browser.runtime.sendMessage({ action: "dismissReminder", id });
   await loadReminders();
+  await loadStats();
 }
 
 function formatDateTime(date) {

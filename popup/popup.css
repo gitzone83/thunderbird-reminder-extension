@@ -33,6 +33,46 @@ header h1 {
   color: #333;
 }
 
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 8px;
+  font-size: 11px;
+}
+
+.stat {
+  color: #666;
+}
+
+.stat .count {
+  font-weight: 600;
+}
+
+.stat.pending .count {
+  color: #1976d2;
+}
+
+.stat.snoozed .count {
+  color: #7b1fa2;
+}
+
+.stat.notified .count {
+  color: #ff9800;
+}
+
+.stat.completed .count {
+  color: #388e3c;
+}
+
+.stat.dismissed .count {
+  color: #757575;
+}
+
+.stat-separator {
+  color: #ccc;
+}
+
 .loading {
   padding: 40px;
   text-align: center;

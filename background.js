@@ -28,6 +28,9 @@ async function initializeAlarm() {
 
   // Do an immediate check on startup
   await checkDueReminders();
+
+  // Update badge on startup
+  await updateBadge();
 }
 
 // ============================================================================
@@ -43,6 +46,7 @@ browser.alarms.onAlarm.addListener(async (alarm) => {
 async function checkDueReminders() {
   const reminders = await getReminders();
   const now = new Date();
+  let statusChanged = false;
 
   for (const reminder of reminders) {
     if (reminder.status !== "pending" && reminder.status !== "snoozed") {
@@ -54,7 +58,13 @@ async function checkDueReminders() {
       await showReminderNotification(reminder);
       // Mark as notified to prevent repeated notifications
       await updateReminderStatus(reminder.id, "notified");
+      statusChanged = true;
     }
+  }
+
+  // Update badge if any status changed
+  if (statusChanged) {
+    await updateBadge();
   }
 }
 
@@ -198,6 +208,10 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     case "getReminders":
       return await getReminders();
 
+    case "getReminderCounts":
+      const allReminders = await getReminders();
+      return getReminderCounts(allReminders);
+
     case "getReminderById":
       return await getReminderById(message.id);
 
@@ -239,6 +253,7 @@ async function createReminder(data) {
   };
 
   await browser.storage.local.set({ reminders });
+  await updateBadge();
   console.log("Created reminder:", id);
   return { success: true, id };
 }
@@ -281,6 +296,7 @@ async function snoozeReminder(id, minutes) {
 
   await browser.storage.local.set({ reminders });
   await browser.notifications.clear(id);
+  await updateBadge();
 
   console.log(`Snoozed reminder ${id} for ${minutes} minutes`);
   return { success: true };
@@ -298,6 +314,7 @@ async function dismissReminder(id) {
 
   await browser.storage.local.set({ reminders });
   await browser.notifications.clear(id);
+  await updateBadge();
 
   console.log("Dismissed reminder:", id);
   return { success: true };
@@ -316,6 +333,7 @@ async function completeReminder(id) {
 
   await browser.storage.local.set({ reminders });
   await browser.notifications.clear(id);
+  await updateBadge();
 
   console.log("Completed reminder:", id);
   return { success: true };
@@ -331,6 +349,7 @@ async function deleteReminder(id) {
   delete reminders[id];
   await browser.storage.local.set({ reminders });
   await browser.notifications.clear(id);
+  await updateBadge();
 
   console.log("Deleted reminder:", id);
   return { success: true };
@@ -353,6 +372,57 @@ async function getPendingMessage() {
   // Clear it after retrieval
   await browser.storage.local.remove("pendingReminderMessage");
   return pendingReminderMessage;
+}
+
+// ============================================================================
+// Badge Updates
+// ============================================================================
+
+async function updateBadge() {
+  const reminders = await getReminders();
+  const counts = getReminderCounts(reminders);
+
+  const pendingAndSnoozed = counts.pending + counts.snoozed;
+  const due = counts.notified;
+
+  if (pendingAndSnoozed > 0 || due > 0) {
+    // Show format: pending|due (e.g., "3|2")
+    const badgeText = `${pendingAndSnoozed}|${due}`;
+    await browser.browserAction.setBadgeText({ text: badgeText });
+
+    // Use different colors based on urgency
+    if (due > 0) {
+      // Orange for due reminders
+      await browser.browserAction.setBadgeBackgroundColor({ color: "#ff9800" });
+    } else {
+      // Blue for pending only
+      await browser.browserAction.setBadgeBackgroundColor({ color: "#1976d2" });
+    }
+  } else {
+    await browser.browserAction.setBadgeText({ text: "" });
+  }
+}
+
+function getReminderCounts(reminders) {
+  const counts = {
+    pending: 0,
+    snoozed: 0,
+    notified: 0,
+    completed: 0,
+    dismissed: 0,
+    total: reminders.length
+  };
+
+  for (const reminder of reminders) {
+    if (counts.hasOwnProperty(reminder.status)) {
+      counts[reminder.status]++;
+    }
+  }
+
+  counts.active = counts.pending + counts.snoozed + counts.notified;
+  counts.archived = counts.completed + counts.dismissed;
+
+  return counts;
 }
 
 // ============================================================================

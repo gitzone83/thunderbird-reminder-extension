@@ -2,15 +2,16 @@
 
 A Thunderbird extension that adds Outlook-style email reminders. Set reminders on any email and receive notifications when they're due.
 
-![Thunderbird 91+](https://img.shields.io/badge/Thunderbird-91%2B-blue)
+![Thunderbird 106+](https://img.shields.io/badge/Thunderbird-106%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Version](https://img.shields.io/badge/version-0.1.0-orange)
+![Version](https://img.shields.io/badge/version-0.3.1-orange)
 
 ## Features
 
 - **Set reminders** on any email via right-click context menu
 - **Quick options** - In 1 hour, 4 hours, Tomorrow, Next week
 - **Custom date/time** picker for precise scheduling
+- **Visual tags** - Emails with reminders show an orange "Has Reminder" tag in the message list
 - **System notifications** when reminders are due
 - **Snooze** reminders (5 min, 15 min, 1 hour, 4 hours, 1 day, 1 week)
 - **Mark complete** or **dismiss** reminders
@@ -21,13 +22,65 @@ A Thunderbird extension that adds Outlook-style email reminders. Set reminders o
 
 ## Screenshots
 
-*Coming soon*
+### Setting a Reminder
+
+Right-click any email in your message list and select **"Set Reminder..."** to open the reminder dialog.
+
+![Set Reminder Context Menu](screenshots/context-menu.png)
+
+Choose from quick options (1 hour, 4 hours, Tomorrow, Next Week) or set a custom date and time. Add optional notes to remind yourself why.
+
+![Reminder Dialog](screenshots/reminder-dialog.png)
+
+### Visual Tags on Emails
+
+Emails with active reminders automatically display an orange **"Has Reminder"** tag in the message list and message header. The tag is removed when you complete or dismiss the reminder.
+
+![Email with Reminder Tag](screenshots/email-with-tag.png)
+
+**Tip:** Enable the "Tags" column in your message list (right-click column headers) to see tags directly in the list view.
+
+### Toolbar Popup
+
+Click the **Email Reminders** toolbar button to see your active reminders at a glance. The badge shows two numbers: **pending|due** (blue for pending, orange when reminders are due).
+
+![Toolbar Badge](screenshots/toolbar-badge.png)
+
+Reminders are color-coded by urgency:
+- **Red** - Overdue reminders
+- **Yellow** - Due within the next hour
+- **White** - Future reminders
+
+![Toolbar Popup](screenshots/toolbar-popup.png)
+
+### Full Reminder List
+
+Click **"View All Reminders"** for the complete list with filtering options (Active, Completed, Dismissed).
+
+![Reminder List](screenshots/reminder-list.png)
+
+### Notifications
+
+When a reminder is due, you'll receive a system notification. Click the notification to open the email.
+
+![Desktop Notification](screenshots/notification.png)
+
+### Settings
+
+Access settings via **Tools > Add-ons and Themes > Email Reminders > Options** to export, import, or manage your reminder data.
+
+![Settings Page](screenshots/settings.png)
 
 ## Installation
 
 ### From Thunderbird Add-ons (Recommended)
 
-*Coming soon - pending review*
+1. Open Thunderbird
+2. Go to **Tools** > **Add-ons and Themes**
+3. Search for "**Email Reminders**"
+4. Click **Add to Thunderbird**
+
+Or visit: [Email Reminders on Thunderbird Add-ons](https://addons.thunderbird.net/en-US/thunderbird/addon/email-reminders/)
 
 ### Manual Installation
 
@@ -42,7 +95,7 @@ A Thunderbird extension that adds Outlook-style email reminders. Set reminders o
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/thunderbird-reminder-extension.git
+   git clone https://github.com/gitzone83/thunderbird-reminder-extension.git
    ```
 2. Open Thunderbird
 3. Go to **Tools** > **Add-ons and Themes** > gear icon > **Debug Add-ons**
@@ -78,7 +131,7 @@ Access via **Tools** > **Add-ons and Themes** > **Email Reminders** > **Options*
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/thunderbird-reminder-extension.git
+git clone https://github.com/gitzone83/thunderbird-reminder-extension.git
 cd thunderbird-reminder-extension
 
 # Create XPI package
@@ -118,7 +171,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Roadmap
 
-- [ ] Visual indicators on emails with active reminders
+- [x] Visual indicators on emails with active reminders
 - [ ] Recurring reminders
 - [ ] Calendar integration
 - [ ] Keyboard shortcuts

@@ -3,18 +3,122 @@
 
 const ALARM_NAME = "checkReminders";
 const CHECK_INTERVAL_MINUTES = 1;
+const REMINDER_TAG_KEY = "reminder";
+const REMINDER_TAG_COLOR = "#ff9800"; // Orange color for reminder tag
+
+// ============================================================================
+// Tag Management
+// ============================================================================
+
+async function initializeReminderTag() {
+  try {
+    // Try the available API (supports both MV2 and MV3)
+    let tags;
+    if (browser.messages.tags && browser.messages.tags.list) {
+      tags = await browser.messages.tags.list();
+    } else if (browser.messages.listTags) {
+      tags = await browser.messages.listTags();
+    } else {
+      console.warn("No tag listing API available");
+      return;
+    }
+
+    const existingTag = tags.find(tag => tag.key === REMINDER_TAG_KEY);
+
+    if (!existingTag) {
+      // Try the available create API
+      if (browser.messages.tags && browser.messages.tags.create) {
+        await browser.messages.tags.create(REMINDER_TAG_KEY, "Has Reminder", REMINDER_TAG_COLOR);
+      } else if (browser.messages.createTag) {
+        await browser.messages.createTag(REMINDER_TAG_KEY, "Has Reminder", REMINDER_TAG_COLOR);
+      } else {
+        console.warn("No tag creation API available");
+        return;
+      }
+    }
+  } catch (error) {
+    console.error("Error initializing reminder tag:", error);
+  }
+}
+
+async function addReminderTag(messageId) {
+  try {
+    const message = await browser.messages.get(messageId);
+    if (message) {
+      const currentTags = message.tags || [];
+      if (!currentTags.includes(REMINDER_TAG_KEY)) {
+        await browser.messages.update(messageId, {
+          tags: [...currentTags, REMINDER_TAG_KEY]
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Error adding reminder tag:", error);
+  }
+}
+
+async function removeReminderTag(messageId) {
+  try {
+    const message = await browser.messages.get(messageId);
+    if (message) {
+      const currentTags = message.tags || [];
+      if (currentTags.includes(REMINDER_TAG_KEY)) {
+        await browser.messages.update(messageId, {
+          tags: currentTags.filter(tag => tag !== REMINDER_TAG_KEY)
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Error removing reminder tag:", error);
+  }
+}
+
+async function hasOtherActiveReminders(messageId, excludeReminderId) {
+  const { reminders = {} } = await browser.storage.local.get("reminders");
+  const activeStatuses = ["pending", "snoozed", "notified"];
+
+  for (const [id, reminder] of Object.entries(reminders)) {
+    if (id !== excludeReminderId &&
+        reminder.messageId === messageId &&
+        activeStatuses.includes(reminder.status)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+async function removeReminderTagIfNoActiveReminders(messageId, excludeReminderId) {
+  const hasOther = await hasOtherActiveReminders(messageId, excludeReminderId);
+  if (!hasOther) {
+    await removeReminderTag(messageId);
+  }
+}
+
+async function syncReminderTags() {
+  try {
+    const reminders = await getReminders();
+    const activeReminders = reminders.filter(r =>
+      r.status === "pending" || r.status === "snoozed" || r.status === "notified"
+    );
+
+    // Add tags to messages with active reminders
+    for (const reminder of activeReminders) {
+      await addReminderTag(reminder.messageId);
+    }
+  } catch (error) {
+    console.error("Error syncing reminder tags:", error);
+  }
+}
 
 // ============================================================================
 // Initialization
 // ============================================================================
 
 browser.runtime.onInstalled.addListener(async () => {
-  console.log("Email Reminders extension installed");
   await initializeAlarm();
 });
 
 browser.runtime.onStartup.addListener(async () => {
-  console.log("Email Reminders extension started");
   await initializeAlarm();
 });
 
@@ -24,10 +128,15 @@ async function initializeAlarm() {
   await browser.alarms.create(ALARM_NAME, {
     periodInMinutes: CHECK_INTERVAL_MINUTES
   });
-  console.log(`Alarm set to check every ${CHECK_INTERVAL_MINUTES} minute(s)`);
+
+  // Initialize reminder tag
+  await initializeReminderTag();
 
   // Do an immediate check on startup
   await checkDueReminders();
+
+  // Sync reminder tags on startup
+  await syncReminderTags();
 
   // Update badge on startup
   await updateBadge();
@@ -107,7 +216,6 @@ async function openEmail(reminder) {
       message = await browser.messages.get(reminder.messageId);
     } catch (e) {
       // Message ID might be stale, try finding by header ID
-      console.log("Message ID stale, searching by header ID");
     }
 
     if (!message && reminder.messageHeaderId) {
@@ -253,8 +361,8 @@ async function createReminder(data) {
   };
 
   await browser.storage.local.set({ reminders });
+  await addReminderTag(data.messageId);
   await updateBadge();
-  console.log("Created reminder:", id);
   return { success: true, id };
 }
 
@@ -297,8 +405,6 @@ async function snoozeReminder(id, minutes) {
   await browser.storage.local.set({ reminders });
   await browser.notifications.clear(id);
   await updateBadge();
-
-  console.log(`Snoozed reminder ${id} for ${minutes} minutes`);
   return { success: true };
 }
 
@@ -309,14 +415,14 @@ async function dismissReminder(id) {
     return { error: "Reminder not found" };
   }
 
+  const messageId = reminders[id].messageId;
   reminders[id].status = "dismissed";
   reminders[id].modifiedDate = new Date().toISOString();
 
   await browser.storage.local.set({ reminders });
+  await removeReminderTagIfNoActiveReminders(messageId, id);
   await browser.notifications.clear(id);
   await updateBadge();
-
-  console.log("Dismissed reminder:", id);
   return { success: true };
 }
 
@@ -327,15 +433,15 @@ async function completeReminder(id) {
     return { error: "Reminder not found" };
   }
 
+  const messageId = reminders[id].messageId;
   reminders[id].status = "completed";
   reminders[id].completedDate = new Date().toISOString();
   reminders[id].modifiedDate = new Date().toISOString();
 
   await browser.storage.local.set({ reminders });
+  await removeReminderTagIfNoActiveReminders(messageId, id);
   await browser.notifications.clear(id);
   await updateBadge();
-
-  console.log("Completed reminder:", id);
   return { success: true };
 }
 
@@ -346,12 +452,19 @@ async function deleteReminder(id) {
     return { error: "Reminder not found" };
   }
 
+  const messageId = reminders[id].messageId;
+  const wasActive = ["pending", "snoozed", "notified"].includes(reminders[id].status);
+
   delete reminders[id];
   await browser.storage.local.set({ reminders });
+
+  // Only check for tag removal if the deleted reminder was active
+  if (wasActive) {
+    await removeReminderTagIfNoActiveReminders(messageId, id);
+  }
+
   await browser.notifications.clear(id);
   await updateBadge();
-
-  console.log("Deleted reminder:", id);
   return { success: true };
 }
 

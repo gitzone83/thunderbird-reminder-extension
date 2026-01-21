@@ -30,3 +30,6 @@ coverage/
 # Local development
 .env
 .env.local
+
+# Claude Code
+.claude/

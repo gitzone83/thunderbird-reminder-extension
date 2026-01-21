@@ -1,15 +1,15 @@
 {
   "manifest_version": 2,
   "name": "Email Reminders",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "default_locale": "en",
   "description": "Set reminders for emails with Outlook-style notifications",
-  "author": "Michal Hajduczenia",
+  "author": "Marek Hajduczenia",
 
   "browser_specific_settings": {
     "gecko": {
       "id": "email-reminders@mhajduczenia.dev",
-      "strict_min_version": "91.0"
+      "strict_min_version": "106.0"
     }
   },
 
@@ -19,6 +19,8 @@
     "notifications",
     "menus",
     "messagesRead",
+    "messagesUpdate",
+    "messagesTags",
     "accountsRead"
   ],
 

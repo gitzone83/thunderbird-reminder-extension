@@ -362,8 +362,24 @@ async function createReminder(data) {
 
   await browser.storage.local.set({ reminders });
   await addReminderTag(data.messageId);
+  await archiveMessageIfEnabled(data.messageId);
   await updateBadge();
   return { success: true, id };
+}
+
+async function archiveMessageIfEnabled(messageId) {
+  try {
+    const { settings = {} } = await browser.storage.local.get("settings");
+    if (!settings.archiveOnReminder) return;
+
+    if (browser.messages.archive) {
+      await browser.messages.archive([messageId]);
+    } else {
+      console.warn("messages.archive API not available");
+    }
+  } catch (error) {
+    console.error("Error archiving message:", error);
+  }
 }
 
 async function updateReminder(id, data) {

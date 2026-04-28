@@ -10,6 +10,7 @@ async function loadSettings() {
 
   document.getElementById("checkInterval").value = settings.checkInterval || "1";
   document.getElementById("defaultTime").value = settings.defaultTime || "09:00";
+  document.getElementById("archiveOnReminder").checked = settings.archiveOnReminder === true;
 }
 
 function setupEventListeners() {
@@ -26,7 +27,8 @@ function setupEventListeners() {
 async function saveSettings() {
   const settings = {
     checkInterval: document.getElementById("checkInterval").value,
-    defaultTime: document.getElementById("defaultTime").value
+    defaultTime: document.getElementById("defaultTime").value,
+    archiveOnReminder: document.getElementById("archiveOnReminder").checked
   };
 
   await browser.storage.local.set({ settings });

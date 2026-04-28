@@ -20,6 +20,7 @@
     "menus",
     "messagesRead",
     "messagesUpdate",
+    "messagesMove",
     "messagesTags",
     "accountsRead"
   ],

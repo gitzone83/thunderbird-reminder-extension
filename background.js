@@ -41,13 +41,13 @@ async function initializeReminderTag() {
   }
 }
 
-async function addReminderTag(messageId) {
+async function addReminderTag(messageId, headerMessageId) {
   try {
-    const message = await browser.messages.get(messageId);
+    const message = await resolveMessage(messageId, headerMessageId);
     if (message) {
       const currentTags = message.tags || [];
       if (!currentTags.includes(REMINDER_TAG_KEY)) {
-        await browser.messages.update(messageId, {
+        await browser.messages.update(message.id, {
           tags: [...currentTags, REMINDER_TAG_KEY]
         });
       }
@@ -57,13 +57,13 @@ async function addReminderTag(messageId) {
   }
 }
 
-async function removeReminderTag(messageId) {
+async function removeReminderTag(messageId, headerMessageId) {
   try {
-    const message = await browser.messages.get(messageId);
+    const message = await resolveMessage(messageId, headerMessageId);
     if (message) {
       const currentTags = message.tags || [];
       if (currentTags.includes(REMINDER_TAG_KEY)) {
-        await browser.messages.update(messageId, {
+        await browser.messages.update(message.id, {
           tags: currentTags.filter(tag => tag !== REMINDER_TAG_KEY)
         });
       }
@@ -73,24 +73,37 @@ async function removeReminderTag(messageId) {
   }
 }
 
-async function hasOtherActiveReminders(messageId, excludeReminderId) {
+async function hasOtherActiveReminders(messageId, headerMessageId, excludeReminderId) {
   const { reminders = {} } = await browser.storage.local.get("reminders");
   const activeStatuses = ["pending", "snoozed", "notified"];
 
   for (const [id, reminder] of Object.entries(reminders)) {
-    if (id !== excludeReminderId &&
-        reminder.messageId === messageId &&
-        activeStatuses.includes(reminder.status)) {
+    if (id === excludeReminderId || !activeStatuses.includes(reminder.status)) {
+      continue;
+    }
+
+    if (headerMessageId && reminder.messageHeaderId) {
+      if (reminder.messageHeaderId === headerMessageId) {
+        return true;
+      }
+      continue;
+    }
+
+    if (reminder.messageId === messageId) {
       return true;
     }
   }
   return false;
 }
 
-async function removeReminderTagIfNoActiveReminders(messageId, excludeReminderId) {
-  const hasOther = await hasOtherActiveReminders(messageId, excludeReminderId);
+async function removeReminderTagIfNoActiveReminders(messageId, headerMessageId, excludeReminderId) {
+  const hasOther = await hasOtherActiveReminders(
+    messageId,
+    headerMessageId,
+    excludeReminderId
+  );
   if (!hasOther) {
-    await removeReminderTag(messageId);
+    await removeReminderTag(messageId, headerMessageId);
   }
 }
 
@@ -101,9 +114,13 @@ async function syncReminderTags() {
       r.status === "pending" || r.status === "snoozed" || r.status === "notified"
     );
 
-    // Add tags to messages with active reminders
+    // Add tags to messages with active reminders (resolves via stable header Message-ID)
     for (const reminder of activeReminders) {
-      await addReminderTag(reminder.messageId);
+      const message = await resolveMessage(reminder.messageId, reminder.messageHeaderId);
+      if (message) {
+        await refreshStoredMessageId(reminder.id, message);
+        await addReminderTag(message.id, reminder.messageHeaderId);
+      }
     }
   } catch (error) {
     console.error("Error syncing reminder tags:", error);
@@ -208,34 +225,6 @@ browser.notifications.onClosed.addListener(async (notificationId) => {
   // User can snooze or dismiss from popup
 });
 
-async function openEmail(reminder) {
-  try {
-    // First try with stored messageId
-    let message = null;
-    try {
-      message = await browser.messages.get(reminder.messageId);
-    } catch (e) {
-      // Message ID might be stale, try finding by header ID
-    }
-
-    if (!message && reminder.messageHeaderId) {
-      message = await findMessageByHeaderId(reminder.messageHeaderId);
-    }
-
-    if (message) {
-      // Open the message in a new tab
-      await browser.messageDisplay.open({
-        messageId: message.id,
-        location: "tab"
-      });
-    } else {
-      console.warn("Could not find message for reminder:", reminder.id);
-    }
-  } catch (error) {
-    console.error("Error opening email:", error);
-  }
-}
-
 async function findMessageByHeaderId(headerMessageId) {
   try {
     const result = await browser.messages.query({
@@ -248,6 +237,67 @@ async function findMessageByHeaderId(headerMessageId) {
     console.error("Error searching for message:", error);
   }
   return null;
+}
+
+// Thunderbird's numeric message.id can be recycled after delete/move/compact.
+// Prefer the stable RFC Message-ID header, and reject numeric IDs that point
+// at a different message when a header id is known.
+async function resolveMessage(messageId, headerMessageId) {
+  if (headerMessageId) {
+    const byHeader = await findMessageByHeaderId(headerMessageId);
+    if (byHeader) {
+      return byHeader;
+    }
+  }
+
+  if (messageId != null) {
+    try {
+      const message = await browser.messages.get(messageId);
+      if (!message) {
+        return null;
+      }
+      if (
+        headerMessageId &&
+        message.headerMessageId &&
+        message.headerMessageId !== headerMessageId
+      ) {
+        return null;
+      }
+      return message;
+    } catch (error) {
+      // Stored numeric id may be invalid after mailbox changes
+    }
+  }
+
+  return null;
+}
+
+async function refreshStoredMessageId(reminderId, message) {
+  if (!reminderId || !message) {
+    return;
+  }
+  const reminder = await getReminderById(reminderId);
+  if (reminder && reminder.messageId !== message.id) {
+    await updateReminder(reminderId, { messageId: message.id });
+  }
+}
+
+async function openEmail(reminder) {
+  try {
+    const message = await resolveMessage(reminder.messageId, reminder.messageHeaderId);
+
+    if (message) {
+      await refreshStoredMessageId(reminder.id, message);
+      await browser.messageDisplay.open({
+        messageId: message.id,
+        location: "tab"
+      });
+    } else {
+      console.warn("Could not find message for reminder:", reminder.id);
+    }
+  } catch (error) {
+    console.error("Error opening email:", error);
+  }
 }
 
 // ============================================================================
@@ -361,19 +411,25 @@ async function createReminder(data) {
   };
 
   await browser.storage.local.set({ reminders });
-  await addReminderTag(data.messageId);
-  await archiveMessageIfEnabled(data.messageId);
+  await addReminderTag(data.messageId, data.messageHeaderId);
+  await archiveMessageIfEnabled(data.messageId, data.messageHeaderId);
   await updateBadge();
   return { success: true, id };
 }
 
-async function archiveMessageIfEnabled(messageId) {
+async function archiveMessageIfEnabled(messageId, headerMessageId) {
   try {
     const { settings = {} } = await browser.storage.local.get("settings");
     if (!settings.archiveOnReminder) return;
 
+    const message = await resolveMessage(messageId, headerMessageId);
+    if (!message) {
+      console.warn("Could not resolve message for archive");
+      return;
+    }
+
     if (browser.messages.archive) {
-      await browser.messages.archive([messageId]);
+      await browser.messages.archive([message.id]);
     } else {
       console.warn("messages.archive API not available");
     }
@@ -432,11 +488,12 @@ async function dismissReminder(id) {
   }
 
   const messageId = reminders[id].messageId;
+  const headerMessageId = reminders[id].messageHeaderId;
   reminders[id].status = "dismissed";
   reminders[id].modifiedDate = new Date().toISOString();
 
   await browser.storage.local.set({ reminders });
-  await removeReminderTagIfNoActiveReminders(messageId, id);
+  await removeReminderTagIfNoActiveReminders(messageId, headerMessageId, id);
   await browser.notifications.clear(id);
   await updateBadge();
   return { success: true };
@@ -450,12 +507,13 @@ async function completeReminder(id) {
   }
 
   const messageId = reminders[id].messageId;
+  const headerMessageId = reminders[id].messageHeaderId;
   reminders[id].status = "completed";
   reminders[id].completedDate = new Date().toISOString();
   reminders[id].modifiedDate = new Date().toISOString();
 
   await browser.storage.local.set({ reminders });
-  await removeReminderTagIfNoActiveReminders(messageId, id);
+  await removeReminderTagIfNoActiveReminders(messageId, headerMessageId, id);
   await browser.notifications.clear(id);
   await updateBadge();
   return { success: true };
@@ -469,6 +527,7 @@ async function deleteReminder(id) {
   }
 
   const messageId = reminders[id].messageId;
+  const headerMessageId = reminders[id].messageHeaderId;
   const wasActive = ["pending", "snoozed", "notified"].includes(reminders[id].status);
 
   delete reminders[id];
@@ -476,7 +535,7 @@ async function deleteReminder(id) {
 
   // Only check for tag removal if the deleted reminder was active
   if (wasActive) {
-    await removeReminderTagIfNoActiveReminders(messageId, id);
+    await removeReminderTagIfNoActiveReminders(messageId, headerMessageId, id);
   }
 
   await browser.notifications.clear(id);

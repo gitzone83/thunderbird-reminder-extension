@@ -41,14 +41,14 @@ async function initializeReminderTag() {
   }
 }
 
-async function addReminderTag(message_id, header_message_id) {
+async function addReminderTag(messageId, headerMessageId) {
   try {
-    const message = await resolve_message(message_id, header_message_id);
+    const message = await resolveMessage(messageId, headerMessageId);
     if (message) {
-      const current_tags = message.tags || [];
-      if (!current_tags.includes(REMINDER_TAG_KEY)) {
+      const currentTags = message.tags || [];
+      if (!currentTags.includes(REMINDER_TAG_KEY)) {
         await browser.messages.update(message.id, {
-          tags: [...current_tags, REMINDER_TAG_KEY]
+          tags: [...currentTags, REMINDER_TAG_KEY]
         });
       }
     }
@@ -57,14 +57,14 @@ async function addReminderTag(message_id, header_message_id) {
   }
 }
 
-async function removeReminderTag(message_id, header_message_id) {
+async function removeReminderTag(messageId, headerMessageId) {
   try {
-    const message = await resolve_message(message_id, header_message_id);
+    const message = await resolveMessage(messageId, headerMessageId);
     if (message) {
-      const current_tags = message.tags || [];
-      if (current_tags.includes(REMINDER_TAG_KEY)) {
+      const currentTags = message.tags || [];
+      if (currentTags.includes(REMINDER_TAG_KEY)) {
         await browser.messages.update(message.id, {
-          tags: current_tags.filter(tag => tag !== REMINDER_TAG_KEY)
+          tags: currentTags.filter(tag => tag !== REMINDER_TAG_KEY)
         });
       }
     }
@@ -73,52 +73,52 @@ async function removeReminderTag(message_id, header_message_id) {
   }
 }
 
-async function hasOtherActiveReminders(message_id, header_message_id, exclude_reminder_id) {
+async function hasOtherActiveReminders(messageId, headerMessageId, excludeReminderId) {
   const { reminders = {} } = await browser.storage.local.get("reminders");
-  const active_statuses = ["pending", "snoozed", "notified"];
+  const activeStatuses = ["pending", "snoozed", "notified"];
 
   for (const [id, reminder] of Object.entries(reminders)) {
-    if (id === exclude_reminder_id || !active_statuses.includes(reminder.status)) {
+    if (id === excludeReminderId || !activeStatuses.includes(reminder.status)) {
       continue;
     }
 
-    if (header_message_id && reminder.messageHeaderId) {
-      if (reminder.messageHeaderId === header_message_id) {
+    if (headerMessageId && reminder.messageHeaderId) {
+      if (reminder.messageHeaderId === headerMessageId) {
         return true;
       }
       continue;
     }
 
-    if (reminder.messageId === message_id) {
+    if (reminder.messageId === messageId) {
       return true;
     }
   }
   return false;
 }
 
-async function removeReminderTagIfNoActiveReminders(message_id, header_message_id, exclude_reminder_id) {
-  const has_other = await hasOtherActiveReminders(
-    message_id,
-    header_message_id,
-    exclude_reminder_id
+async function removeReminderTagIfNoActiveReminders(messageId, headerMessageId, excludeReminderId) {
+  const hasOther = await hasOtherActiveReminders(
+    messageId,
+    headerMessageId,
+    excludeReminderId
   );
-  if (!has_other) {
-    await removeReminderTag(message_id, header_message_id);
+  if (!hasOther) {
+    await removeReminderTag(messageId, headerMessageId);
   }
 }
 
 async function syncReminderTags() {
   try {
     const reminders = await getReminders();
-    const active_reminders = reminders.filter(r =>
+    const activeReminders = reminders.filter(r =>
       r.status === "pending" || r.status === "snoozed" || r.status === "notified"
     );
 
     // Add tags to messages with active reminders (resolves via stable header Message-ID)
-    for (const reminder of active_reminders) {
-      const message = await resolve_message(reminder.messageId, reminder.messageHeaderId);
+    for (const reminder of activeReminders) {
+      const message = await resolveMessage(reminder.messageId, reminder.messageHeaderId);
       if (message) {
-        await refresh_stored_message_id(reminder.id, message);
+        await refreshStoredMessageId(reminder.id, message);
         await addReminderTag(message.id, reminder.messageHeaderId);
       }
     }
@@ -225,10 +225,10 @@ browser.notifications.onClosed.addListener(async (notificationId) => {
   // User can snooze or dismiss from popup
 });
 
-async function find_message_by_header_id(header_message_id) {
+async function findMessageByHeaderId(headerMessageId) {
   try {
     const result = await browser.messages.query({
-      headerMessageId: header_message_id
+      headerMessageId: headerMessageId
     });
     if (result.messages && result.messages.length > 0) {
       return result.messages[0];
@@ -242,24 +242,24 @@ async function find_message_by_header_id(header_message_id) {
 // Thunderbird's numeric message.id can be recycled after delete/move/compact.
 // Prefer the stable RFC Message-ID header, and reject numeric IDs that point
 // at a different message when a header id is known.
-async function resolve_message(message_id, header_message_id) {
-  if (header_message_id) {
-    const by_header = await find_message_by_header_id(header_message_id);
-    if (by_header) {
-      return by_header;
+async function resolveMessage(messageId, headerMessageId) {
+  if (headerMessageId) {
+    const byHeader = await findMessageByHeaderId(headerMessageId);
+    if (byHeader) {
+      return byHeader;
     }
   }
 
-  if (message_id != null) {
+  if (messageId != null) {
     try {
-      const message = await browser.messages.get(message_id);
+      const message = await browser.messages.get(messageId);
       if (!message) {
         return null;
       }
       if (
-        header_message_id &&
+        headerMessageId &&
         message.headerMessageId &&
-        message.headerMessageId !== header_message_id
+        message.headerMessageId !== headerMessageId
       ) {
         return null;
       }
@@ -272,22 +272,22 @@ async function resolve_message(message_id, header_message_id) {
   return null;
 }
 
-async function refresh_stored_message_id(reminder_id, message) {
-  if (!reminder_id || !message) {
+async function refreshStoredMessageId(reminderId, message) {
+  if (!reminderId || !message) {
     return;
   }
-  const reminder = await getReminderById(reminder_id);
+  const reminder = await getReminderById(reminderId);
   if (reminder && reminder.messageId !== message.id) {
-    await updateReminder(reminder_id, { messageId: message.id });
+    await updateReminder(reminderId, { messageId: message.id });
   }
 }
 
 async function openEmail(reminder) {
   try {
-    const message = await resolve_message(reminder.messageId, reminder.messageHeaderId);
+    const message = await resolveMessage(reminder.messageId, reminder.messageHeaderId);
 
     if (message) {
-      await refresh_stored_message_id(reminder.id, message);
+      await refreshStoredMessageId(reminder.id, message);
       await browser.messageDisplay.open({
         messageId: message.id,
         location: "tab"
@@ -417,12 +417,12 @@ async function createReminder(data) {
   return { success: true, id };
 }
 
-async function archiveMessageIfEnabled(message_id, header_message_id) {
+async function archiveMessageIfEnabled(messageId, headerMessageId) {
   try {
     const { settings = {} } = await browser.storage.local.get("settings");
     if (!settings.archiveOnReminder) return;
 
-    const message = await resolve_message(message_id, header_message_id);
+    const message = await resolveMessage(messageId, headerMessageId);
     if (!message) {
       console.warn("Could not resolve message for archive");
       return;
@@ -487,13 +487,13 @@ async function dismissReminder(id) {
     return { error: "Reminder not found" };
   }
 
-  const message_id = reminders[id].messageId;
-  const header_message_id = reminders[id].messageHeaderId;
+  const messageId = reminders[id].messageId;
+  const headerMessageId = reminders[id].messageHeaderId;
   reminders[id].status = "dismissed";
   reminders[id].modifiedDate = new Date().toISOString();
 
   await browser.storage.local.set({ reminders });
-  await removeReminderTagIfNoActiveReminders(message_id, header_message_id, id);
+  await removeReminderTagIfNoActiveReminders(messageId, headerMessageId, id);
   await browser.notifications.clear(id);
   await updateBadge();
   return { success: true };
@@ -506,14 +506,14 @@ async function completeReminder(id) {
     return { error: "Reminder not found" };
   }
 
-  const message_id = reminders[id].messageId;
-  const header_message_id = reminders[id].messageHeaderId;
+  const messageId = reminders[id].messageId;
+  const headerMessageId = reminders[id].messageHeaderId;
   reminders[id].status = "completed";
   reminders[id].completedDate = new Date().toISOString();
   reminders[id].modifiedDate = new Date().toISOString();
 
   await browser.storage.local.set({ reminders });
-  await removeReminderTagIfNoActiveReminders(message_id, header_message_id, id);
+  await removeReminderTagIfNoActiveReminders(messageId, headerMessageId, id);
   await browser.notifications.clear(id);
   await updateBadge();
   return { success: true };
@@ -526,16 +526,16 @@ async function deleteReminder(id) {
     return { error: "Reminder not found" };
   }
 
-  const message_id = reminders[id].messageId;
-  const header_message_id = reminders[id].messageHeaderId;
-  const was_active = ["pending", "snoozed", "notified"].includes(reminders[id].status);
+  const messageId = reminders[id].messageId;
+  const headerMessageId = reminders[id].messageHeaderId;
+  const wasActive = ["pending", "snoozed", "notified"].includes(reminders[id].status);
 
   delete reminders[id];
   await browser.storage.local.set({ reminders });
 
   // Only check for tag removal if the deleted reminder was active
-  if (was_active) {
-    await removeReminderTagIfNoActiveReminders(message_id, header_message_id, id);
+  if (wasActive) {
+    await removeReminderTagIfNoActiveReminders(messageId, headerMessageId, id);
   }
 
   await browser.notifications.clear(id);

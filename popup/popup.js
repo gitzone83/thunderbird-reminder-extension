@@ -64,7 +64,7 @@ async function loadReminders() {
     }
   } catch (error) {
     console.error("Error loading reminders:", error);
-    loadingEl.textContent = "Error loading reminders";
+    loadingEl.textContent = I18n.message("loadRemindersError");
   }
 }
 
@@ -96,24 +96,24 @@ function createReminderItem(reminder) {
 
   const subject = document.createElement("div");
   subject.className = "reminder-subject";
-  subject.textContent = reminder.subject;
-  subject.title = reminder.subject;
+  subject.textContent = reminder.subject || I18n.message("noSubject");
+  subject.title = reminder.subject || I18n.message("noSubject");
 
   const sender = document.createElement("div");
   sender.className = "reminder-sender";
-  sender.textContent = reminder.sender;
-  sender.title = reminder.sender;
+  sender.textContent = reminder.sender || I18n.message("unknownSender");
+  sender.title = reminder.sender || I18n.message("unknownSender");
 
   const due = document.createElement("div");
   due.className = "reminder-due";
   if (isOverdue) {
     due.classList.add("overdue");
-    due.textContent = `Overdue: ${formatRelativeTime(dueDate)}`;
+    due.textContent = I18n.message("overdueAt", I18n.formatRelativeTime(dueDate));
   } else if (isDueSoon) {
     due.classList.add("due-soon");
-    due.textContent = `Due: ${formatRelativeTime(dueDate)}`;
+    due.textContent = I18n.message("dueAt", I18n.formatRelativeTime(dueDate));
   } else {
-    due.textContent = `Due: ${formatDateTime(dueDate)}`;
+    due.textContent = I18n.message("dueAt", I18n.formatDateTime(dueDate));
   }
 
   const actions = document.createElement("div");
@@ -121,7 +121,7 @@ function createReminderItem(reminder) {
 
   // Open email button
   const openBtn = document.createElement("button");
-  openBtn.textContent = "Open Email";
+  openBtn.textContent = I18n.message("openEmail");
   openBtn.className = "primary";
   openBtn.addEventListener("click", async (e) => {
     e.stopPropagation();
@@ -133,7 +133,7 @@ function createReminderItem(reminder) {
   snoozeContainer.className = "snooze-menu";
 
   const snoozeBtn = document.createElement("button");
-  snoozeBtn.textContent = "Snooze";
+  snoozeBtn.textContent = I18n.message("snooze");
   snoozeBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     const dropdown = snoozeContainer.querySelector(".snooze-dropdown");
@@ -144,12 +144,12 @@ function createReminderItem(reminder) {
   snoozeDropdown.className = "snooze-dropdown";
 
   const snoozeOptions = [
-    { label: "5 minutes", minutes: 5 },
-    { label: "15 minutes", minutes: 15 },
-    { label: "1 hour", minutes: 60 },
-    { label: "4 hours", minutes: 240 },
-    { label: "Tomorrow", minutes: 24 * 60 },
-    { label: "Next week", minutes: 7 * 24 * 60 }
+    { label: I18n.message("fiveMinutes"), minutes: 5 },
+    { label: I18n.message("fifteenMinutes"), minutes: 15 },
+    { label: I18n.message("oneHour"), minutes: 60 },
+    { label: I18n.message("fourHours"), minutes: 240 },
+    { label: I18n.message("tomorrow"), minutes: 24 * 60 },
+    { label: I18n.message("nextWeek"), minutes: 7 * 24 * 60 }
   ];
 
   for (const option of snoozeOptions) {
@@ -167,7 +167,7 @@ function createReminderItem(reminder) {
 
   // Complete button
   const completeBtn = document.createElement("button");
-  completeBtn.textContent = "Done";
+  completeBtn.textContent = I18n.message("done");
   completeBtn.addEventListener("click", async (e) => {
     e.stopPropagation();
     await completeReminder(reminder.id);
@@ -175,7 +175,7 @@ function createReminderItem(reminder) {
 
   // Dismiss button
   const dismissBtn = document.createElement("button");
-  dismissBtn.textContent = "Dismiss";
+  dismissBtn.textContent = I18n.message("dismiss");
   dismissBtn.className = "danger";
   dismissBtn.addEventListener("click", async (e) => {
     e.stopPropagation();
@@ -216,54 +216,6 @@ async function dismissReminder(id) {
   await browser.runtime.sendMessage({ action: "dismissReminder", id });
   await loadReminders();
   await loadStats();
-}
-
-function formatDateTime(date) {
-  const now = new Date();
-  const isToday = date.toDateString() === now.toDateString();
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const isTomorrow = date.toDateString() === tomorrow.toDateString();
-
-  const timeStr = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-  if (isToday) {
-    return `Today at ${timeStr}`;
-  } else if (isTomorrow) {
-    return `Tomorrow at ${timeStr}`;
-  } else {
-    const dateStr = date.toLocaleDateString([], { month: "short", day: "numeric" });
-    return `${dateStr} at ${timeStr}`;
-  }
-}
-
-function formatRelativeTime(date) {
-  const now = new Date();
-  const diffMs = now - date;
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMs < 0) {
-    // Future
-    const futureMins = Math.abs(diffMins);
-    const futureHours = Math.abs(diffHours);
-    if (futureMins < 60) {
-      return `in ${futureMins} minute${futureMins !== 1 ? "s" : ""}`;
-    } else if (futureHours < 24) {
-      return `in ${futureHours} hour${futureHours !== 1 ? "s" : ""}`;
-    }
-    return formatDateTime(date);
-  }
-
-  // Past
-  if (diffMins < 60) {
-    return `${diffMins} minute${diffMins !== 1 ? "s" : ""} ago`;
-  } else if (diffHours < 24) {
-    return `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`;
-  } else {
-    return `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`;
-  }
 }
 
 // Close snooze dropdowns when clicking outside

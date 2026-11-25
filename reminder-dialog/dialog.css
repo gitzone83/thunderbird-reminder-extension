@@ -119,6 +119,7 @@ h2 {
 
 .button-row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 12px;
   margin-top: 24px;

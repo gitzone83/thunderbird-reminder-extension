@@ -34,7 +34,7 @@ async function saveSettings() {
   await browser.storage.local.set({ settings });
 
   const statusEl = document.getElementById("saveStatus");
-  statusEl.textContent = "Settings saved!";
+  statusEl.textContent = I18n.message("settingsSaved");
   statusEl.classList.remove("error");
 
   setTimeout(() => {
@@ -71,7 +71,7 @@ async function importReminders(e) {
     const data = JSON.parse(text);
 
     if (!data.reminders || !Array.isArray(data.reminders)) {
-      throw new Error("Invalid import file format");
+      throw new Error(I18n.message("invalidImport"));
     }
 
     const { reminders = {} } = await browser.storage.local.get("reminders");
@@ -87,10 +87,10 @@ async function importReminders(e) {
 
     await browser.storage.local.set({ reminders });
 
-    alert(`Successfully imported ${importCount} reminder(s).`);
+    alert(I18n.message("importSuccess", String(importCount)));
   } catch (error) {
     console.error("Import error:", error);
-    alert("Error importing reminders: " + error.message);
+    alert(I18n.message("importFailed"));
   }
 
   // Reset file input
@@ -98,7 +98,7 @@ async function importReminders(e) {
 }
 
 async function clearCompleted() {
-  if (!confirm("Are you sure you want to delete all completed and dismissed reminders?")) {
+  if (!confirm(I18n.message("confirmClearCompleted"))) {
     return;
   }
 
@@ -112,18 +112,18 @@ async function clearCompleted() {
   }
 
   await browser.storage.local.set({ reminders: activeReminders });
-  alert("Completed reminders cleared.");
+  alert(I18n.message("completedCleared"));
 }
 
 async function clearAll() {
-  if (!confirm("Are you sure you want to delete ALL reminders? This cannot be undone.")) {
+  if (!confirm(I18n.message("confirmClearAll"))) {
     return;
   }
 
-  if (!confirm("Really delete everything?")) {
+  if (!confirm(I18n.message("confirmClearAllAgain"))) {
     return;
   }
 
   await browser.storage.local.set({ reminders: {} });
-  alert("All reminders cleared.");
+  alert(I18n.message("allCleared"));
 }

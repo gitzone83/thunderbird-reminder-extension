@@ -1,69 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Email Reminders - Settings</title>
+  <title data-i18n="settingsTitle">Email Reminders - Settings</title>
   <link rel="stylesheet" href="options.css">
 </head>
 <body>
   <div class="options-container">
-    <h1>Email Reminders Settings</h1>
+    <h1 data-i18n="settingsHeading">Email Reminders Settings</h1>
 
     <section class="option-section">
-      <h2>Notifications</h2>
+      <h2 data-i18n="notifications">Notifications</h2>
 
       <div class="option-row">
-        <label for="checkInterval">Check for due reminders every:</label>
+        <label for="checkInterval" data-i18n="checkInterval">Check for due reminders every:</label>
         <select id="checkInterval">
-          <option value="1">1 minute</option>
-          <option value="2">2 minutes</option>
-          <option value="5">5 minutes</option>
-          <option value="10">10 minutes</option>
+          <option value="1" data-i18n="oneMinute">1 minute</option>
+          <option value="2" data-i18n="twoMinutes">2 minutes</option>
+          <option value="5" data-i18n="fiveMinutes">5 minutes</option>
+          <option value="10" data-i18n="tenMinutes">10 minutes</option>
         </select>
       </div>
     </section>
 
     <section class="option-section">
-      <h2>Default Reminder Time</h2>
+      <h2 data-i18n="defaultReminderTime">Default Reminder Time</h2>
 
       <div class="option-row">
-        <label for="defaultHour">Default time for day-based quick options:</label>
+        <label for="defaultHour" data-i18n="defaultTimeLabel">Default time for day-based quick options:</label>
         <input type="time" id="defaultTime" value="09:00">
       </div>
     </section>
 
     <section class="option-section">
-      <h2>Inbox Behavior</h2>
+      <h2 data-i18n="inboxBehavior">Inbox Behavior</h2>
 
       <div class="option-row">
         <label>
           <input type="checkbox" id="archiveOnReminder">
-          Archive email after setting a reminder
+          <span data-i18n="archiveOnReminder">Archive email after setting a reminder</span>
         </label>
       </div>
     </section>
 
     <section class="option-section">
-      <h2>Data Management</h2>
+      <h2 data-i18n="dataManagement">Data Management</h2>
 
       <div class="option-row">
-        <button id="exportBtn" class="secondary">Export Reminders</button>
-        <button id="importBtn" class="secondary">Import Reminders</button>
+        <button id="exportBtn" class="secondary" data-i18n="exportReminders">Export Reminders</button>
+        <button id="importBtn" class="secondary" data-i18n="importReminders">Import Reminders</button>
         <input type="file" id="importFile" accept=".json" style="display: none;">
       </div>
 
       <div class="option-row danger-zone">
-        <button id="clearCompletedBtn" class="danger">Clear Completed Reminders</button>
-        <button id="clearAllBtn" class="danger">Clear All Reminders</button>
+        <button id="clearCompletedBtn" class="danger" data-i18n="clearCompleted">Clear Completed Reminders</button>
+        <button id="clearAllBtn" class="danger" data-i18n="clearAll">Clear All Reminders</button>
       </div>
     </section>
 
     <div class="button-row">
-      <button id="saveBtn" class="primary">Save Settings</button>
+      <button id="saveBtn" class="primary" data-i18n="saveSettings">Save Settings</button>
       <span id="saveStatus" class="save-status"></span>
     </div>
   </div>
 
+  <script src="../i18n.js"></script>
   <script src="options.js"></script>
 </body>
 </html>

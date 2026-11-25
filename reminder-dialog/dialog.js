@@ -14,14 +14,14 @@ async function loadMessageData() {
     messageData = await browser.runtime.sendMessage({ action: "getPendingMessage" });
 
     if (messageData) {
-      document.getElementById("subject").textContent = messageData.subject || "(No subject)";
-      document.getElementById("sender").textContent = `From: ${messageData.author || "Unknown"}`;
+      document.getElementById("subject").textContent = messageData.subject || I18n.message("noSubject");
+      document.getElementById("sender").textContent = I18n.message("fromSender", messageData.author || I18n.message("unknownSender"));
     } else {
-      showError("Could not load email information. Please try again.");
+      showError(I18n.message("loadEmailRetry"));
     }
   } catch (error) {
     console.error("Error loading message data:", error);
-    showError("Error loading email information.");
+    showError(I18n.message("loadEmailError"));
   }
 }
 
@@ -70,30 +70,30 @@ async function saveReminder() {
   const notes = document.getElementById("notes").value.trim();
 
   if (!dueDateInput) {
-    showError("Please select a date and time for the reminder.");
+    showError(I18n.message("selectDate"));
     return;
   }
 
   const dueDate = new Date(dueDateInput);
 
   if (isNaN(dueDate.getTime())) {
-    showError("Invalid date. Please select a valid date and time.");
+    showError(I18n.message("invalidDate"));
     return;
   }
 
   if (dueDate <= new Date()) {
-    showError("Please select a future date and time.");
+    showError(I18n.message("futureDate"));
     return;
   }
 
   if (!messageData) {
-    showError("Email information not available. Please close and try again.");
+    showError(I18n.message("emailUnavailable"));
     return;
   }
 
   const saveBtn = document.getElementById("saveBtn");
   saveBtn.disabled = true;
-  saveBtn.textContent = "Saving...";
+  saveBtn.textContent = I18n.message("saving");
 
   try {
     const result = await browser.runtime.sendMessage({
@@ -101,8 +101,8 @@ async function saveReminder() {
       data: {
         messageId: messageData.id,
         messageHeaderId: messageData.headerMessageId,
-        subject: messageData.subject || "(No subject)",
-        sender: messageData.author || "Unknown",
+        subject: messageData.subject || "",
+        sender: messageData.author || "",
         folderId: messageData.folder ? messageData.folder.path : "",
         dueDate: dueDate.toISOString(),
         notes: notes
@@ -112,15 +112,15 @@ async function saveReminder() {
     if (result.success) {
       window.close();
     } else {
-      showError(result.error || "Failed to create reminder.");
+      showError(result.error || I18n.message("createFailed"));
       saveBtn.disabled = false;
-      saveBtn.textContent = "Set Reminder";
+      saveBtn.textContent = I18n.message("saveReminder");
     }
   } catch (error) {
     console.error("Error saving reminder:", error);
-    showError("Error saving reminder. Please try again.");
+    showError(I18n.message("saveFailed"));
     saveBtn.disabled = false;
-    saveBtn.textContent = "Set Reminder";
+    saveBtn.textContent = I18n.message("saveReminder");
   }
 }
 

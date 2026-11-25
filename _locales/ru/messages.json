@@ -1,0 +1,446 @@
+{
+  "extensionName": {
+    "message": "Напоминания о письмах",
+    "description": "UI text: extensionName"
+  },
+  "extensionDescription": {
+    "message": "Напоминания о письмах с уведомлениями в стиле Outlook",
+    "description": "UI text: extensionDescription"
+  },
+  "setReminder": {
+    "message": "Установить напоминание…",
+    "description": "UI text: setReminder"
+  },
+  "reminderNotificationTitle": {
+    "message": "Напоминание о письме",
+    "description": "UI text: reminderNotificationTitle"
+  },
+  "saveReminder": {
+    "message": "Установить напоминание",
+    "description": "UI text: saveReminder"
+  },
+  "loading": {
+    "message": "Загрузка…",
+    "description": "UI text: loading"
+  },
+  "loadingReminders": {
+    "message": "Загрузка напоминаний…",
+    "description": "UI text: loadingReminders"
+  },
+  "noReminders": {
+    "message": "Нет напоминаний",
+    "description": "UI text: noReminders"
+  },
+  "emptyHint": {
+    "message": "Щёлкните письмо правой кнопкой мыши и выберите «Установить напоминание…»",
+    "description": "UI text: emptyHint"
+  },
+  "viewAll": {
+    "message": "Все напоминания",
+    "description": "UI text: viewAll"
+  },
+  "emailLabel": {
+    "message": "Письмо:",
+    "description": "UI text: emailLabel"
+  },
+  "remindOn": {
+    "message": "Дата и время напоминания:",
+    "description": "UI text: remindOn"
+  },
+  "inOneHour": {
+    "message": "Через 1 час",
+    "description": "UI text: inOneHour"
+  },
+  "inFourHours": {
+    "message": "Через 4 часа",
+    "description": "UI text: inFourHours"
+  },
+  "tomorrowMorning": {
+    "message": "Завтра в 09:00",
+    "description": "UI text: tomorrowMorning"
+  },
+  "nextWeek": {
+    "message": "Через неделю",
+    "description": "UI text: nextWeek"
+  },
+  "notesLabel": {
+    "message": "Заметки (необязательно):",
+    "description": "UI text: notesLabel"
+  },
+  "notesPlaceholder": {
+    "message": "Добавьте пояснение к напоминанию…",
+    "description": "UI text: notesPlaceholder"
+  },
+  "cancel": {
+    "message": "Отмена",
+    "description": "UI text: cancel"
+  },
+  "allRemindersTitle": {
+    "message": "Все напоминания — Напоминания о письмах",
+    "description": "UI text: allRemindersTitle"
+  },
+  "activeReminders": {
+    "message": "Активные напоминания",
+    "description": "UI text: activeReminders"
+  },
+  "allReminders": {
+    "message": "Все напоминания",
+    "description": "UI text: allReminders"
+  },
+  "pending": {
+    "message": "Ожидает",
+    "description": "UI text: pending"
+  },
+  "snoozed": {
+    "message": "Отложено",
+    "description": "UI text: snoozed"
+  },
+  "due": {
+    "message": "Срок наступил",
+    "description": "UI text: due"
+  },
+  "completed": {
+    "message": "Выполнено",
+    "description": "UI text: completed"
+  },
+  "dismissed": {
+    "message": "Отклонено",
+    "description": "UI text: dismissed"
+  },
+  "noRemindersFound": {
+    "message": "Напоминания не найдены",
+    "description": "UI text: noRemindersFound"
+  },
+  "listEmptyHint": {
+    "message": "Чтобы создать напоминание, щёлкните письмо правой кнопкой мыши и выберите «Установить напоминание…».",
+    "description": "UI text: listEmptyHint"
+  },
+  "status": {
+    "message": "Статус",
+    "description": "UI text: status"
+  },
+  "subject": {
+    "message": "Тема",
+    "description": "UI text: subject"
+  },
+  "from": {
+    "message": "Отправитель",
+    "description": "UI text: from"
+  },
+  "dueColumn": {
+    "message": "Срок",
+    "description": "UI text: dueColumn"
+  },
+  "actions": {
+    "message": "Действия",
+    "description": "UI text: actions"
+  },
+  "settingsTitle": {
+    "message": "Напоминания о письмах — Настройки",
+    "description": "UI text: settingsTitle"
+  },
+  "settingsHeading": {
+    "message": "Настройки напоминаний",
+    "description": "UI text: settingsHeading"
+  },
+  "notifications": {
+    "message": "Уведомления",
+    "description": "UI text: notifications"
+  },
+  "checkInterval": {
+    "message": "Проверять напоминания раз в:",
+    "description": "UI text: checkInterval"
+  },
+  "oneMinute": {
+    "message": "1 минуту",
+    "description": "UI text: oneMinute"
+  },
+  "twoMinutes": {
+    "message": "2 минуты",
+    "description": "UI text: twoMinutes"
+  },
+  "fiveMinutes": {
+    "message": "5 минут",
+    "description": "UI text: fiveMinutes"
+  },
+  "tenMinutes": {
+    "message": "10 минут",
+    "description": "UI text: tenMinutes"
+  },
+  "fifteenMinutes": {
+    "message": "15 минут",
+    "description": "UI text: fifteenMinutes"
+  },
+  "oneHour": {
+    "message": "1 час",
+    "description": "UI text: oneHour"
+  },
+  "fourHours": {
+    "message": "4 часа",
+    "description": "UI text: fourHours"
+  },
+  "oneDay": {
+    "message": "1 день",
+    "description": "UI text: oneDay"
+  },
+  "oneWeek": {
+    "message": "1 неделю",
+    "description": "UI text: oneWeek"
+  },
+  "tomorrow": {
+    "message": "Завтра",
+    "description": "UI text: tomorrow"
+  },
+  "defaultReminderTime": {
+    "message": "Время напоминания по умолчанию",
+    "description": "UI text: defaultReminderTime"
+  },
+  "defaultTimeLabel": {
+    "message": "Время для быстрого выбора дня:",
+    "description": "UI text: defaultTimeLabel"
+  },
+  "inboxBehavior": {
+    "message": "Обработка входящих писем",
+    "description": "UI text: inboxBehavior"
+  },
+  "archiveOnReminder": {
+    "message": "Архивировать письмо после установки напоминания",
+    "description": "UI text: archiveOnReminder"
+  },
+  "dataManagement": {
+    "message": "Управление данными",
+    "description": "UI text: dataManagement"
+  },
+  "exportReminders": {
+    "message": "Экспорт напоминаний",
+    "description": "UI text: exportReminders"
+  },
+  "importReminders": {
+    "message": "Импорт напоминаний",
+    "description": "UI text: importReminders"
+  },
+  "clearCompleted": {
+    "message": "Удалить завершённые напоминания",
+    "description": "UI text: clearCompleted"
+  },
+  "clearAll": {
+    "message": "Удалить все напоминания",
+    "description": "UI text: clearAll"
+  },
+  "saveSettings": {
+    "message": "Сохранить настройки",
+    "description": "UI text: saveSettings"
+  },
+  "settingsSaved": {
+    "message": "Настройки сохранены!",
+    "description": "UI text: settingsSaved"
+  },
+  "invalidImport": {
+    "message": "Неверный формат файла импорта",
+    "description": "UI text: invalidImport"
+  },
+  "importFailed": {
+    "message": "Не удалось импортировать напоминания. Проверьте файл и повторите попытку.",
+    "description": "UI text: importFailed"
+  },
+  "confirmClearCompleted": {
+    "message": "Удалить все выполненные и отклонённые напоминания?",
+    "description": "UI text: confirmClearCompleted"
+  },
+  "confirmClearAll": {
+    "message": "Удалить ВСЕ напоминания? Это действие нельзя отменить.",
+    "description": "UI text: confirmClearAll"
+  },
+  "confirmClearAllAgain": {
+    "message": "Вы действительно хотите удалить все напоминания?",
+    "description": "UI text: confirmClearAllAgain"
+  },
+  "completedCleared": {
+    "message": "Завершённые напоминания удалены.",
+    "description": "UI text: completedCleared"
+  },
+  "allCleared": {
+    "message": "Все напоминания удалены.",
+    "description": "UI text: allCleared"
+  },
+  "loadRemindersError": {
+    "message": "Не удалось загрузить напоминания",
+    "description": "UI text: loadRemindersError"
+  },
+  "noSubject": {
+    "message": "(Без темы)",
+    "description": "UI text: noSubject"
+  },
+  "unknownSender": {
+    "message": "Неизвестный отправитель",
+    "description": "UI text: unknownSender"
+  },
+  "loadEmailRetry": {
+    "message": "Не удалось загрузить сведения о письме. Повторите попытку.",
+    "description": "UI text: loadEmailRetry"
+  },
+  "loadEmailError": {
+    "message": "Ошибка загрузки сведений о письме.",
+    "description": "UI text: loadEmailError"
+  },
+  "selectDate": {
+    "message": "Выберите дату и время напоминания.",
+    "description": "UI text: selectDate"
+  },
+  "invalidDate": {
+    "message": "Некорректная дата. Выберите допустимые дату и время.",
+    "description": "UI text: invalidDate"
+  },
+  "futureDate": {
+    "message": "Выберите дату и время в будущем.",
+    "description": "UI text: futureDate"
+  },
+  "emailUnavailable": {
+    "message": "Сведения о письме недоступны. Закройте окно и повторите попытку.",
+    "description": "UI text: emailUnavailable"
+  },
+  "saving": {
+    "message": "Сохранение…",
+    "description": "UI text: saving"
+  },
+  "createFailed": {
+    "message": "Не удалось создать напоминание.",
+    "description": "UI text: createFailed"
+  },
+  "saveFailed": {
+    "message": "Не удалось сохранить напоминание. Повторите попытку.",
+    "description": "UI text: saveFailed"
+  },
+  "openEmail": {
+    "message": "Открыть письмо",
+    "description": "UI text: openEmail"
+  },
+  "open": {
+    "message": "Открыть",
+    "description": "UI text: open"
+  },
+  "snooze": {
+    "message": "Отложить",
+    "description": "UI text: snooze"
+  },
+  "snoozePrompt": {
+    "message": "Отложить…",
+    "description": "UI text: snoozePrompt"
+  },
+  "done": {
+    "message": "Выполнено",
+    "description": "UI text: done"
+  },
+  "dismiss": {
+    "message": "Отклонить",
+    "description": "UI text: dismiss"
+  },
+  "delete": {
+    "message": "Удалить",
+    "description": "UI text: delete"
+  },
+  "reactivate": {
+    "message": "Возобновить",
+    "description": "UI text: reactivate"
+  },
+  "confirmDelete": {
+    "message": "Удалить это напоминание?",
+    "description": "UI text: confirmDelete"
+  },
+  "reminderTag": {
+    "message": "Есть напоминание",
+    "description": "UI text: reminderTag"
+  },
+  "reminderNotFound": {
+    "message": "Напоминание не найдено",
+    "description": "UI text: reminderNotFound"
+  },
+  "unknownAction": {
+    "message": "Неизвестное действие",
+    "description": "UI text: unknownAction"
+  },
+  "fromSender": {
+    "message": "От: $SENDER$",
+    "description": "UI text: fromSender",
+    "placeholders": {
+      "sender": {
+        "content": "$1",
+        "example": "Alice <alice@example.com>"
+      }
+    }
+  },
+  "overdueAt": {
+    "message": "Просрочено: $TIME$",
+    "description": "UI text: overdueAt",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "5 minutes ago"
+      }
+    }
+  },
+  "dueAt": {
+    "message": "Срок: $TIME$",
+    "description": "UI text: dueAt",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "Tomorrow at 09:00"
+      }
+    }
+  },
+  "todayAt": {
+    "message": "Сегодня в $TIME$",
+    "description": "UI text: todayAt",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "09:00"
+      }
+    }
+  },
+  "tomorrowAt": {
+    "message": "Завтра в $TIME$",
+    "description": "UI text: tomorrowAt",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "09:00"
+      }
+    }
+  },
+  "dateAtTime": {
+    "message": "$DATE$ в $TIME$",
+    "description": "UI text: dateAtTime",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Nov 25"
+      },
+      "time": {
+        "content": "$2",
+        "example": "09:00"
+      }
+    }
+  },
+  "importSuccess": {
+    "message": "Импортировано напоминаний: $COUNT$.",
+    "description": "UI text: importSuccess",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "21"
+      }
+    }
+  },
+  "extensionVersion": {
+    "message": "Напоминания о письмах — версия $VERSION$",
+    "description": "UI text: extensionVersion",
+    "placeholders": {
+      "version": {
+        "content": "$1",
+        "example": "0.3.1"
+      }
+    }
+  }
+}

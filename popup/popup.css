@@ -160,6 +160,8 @@ header h1 {
 
 .reminder-actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 8px;
   margin-top: 8px;
 }
@@ -205,9 +207,9 @@ header h1 {
 
 .snooze-dropdown {
   display: none;
-  position: absolute;
-  bottom: 100%;
-  left: 0;
+  /* Keep translated choices inside the scrollable list, including its first row. */
+  position: static;
+  margin-top: 4px;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 4px;

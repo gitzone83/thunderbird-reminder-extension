@@ -1,38 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Email Reminders</title>
+  <title data-i18n="extensionName">Email Reminders</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="popup-container">
     <header>
-      <h1>Email Reminders</h1>
+      <h1 data-i18n="extensionName">Email Reminders</h1>
       <div id="stats" class="stats hidden">
-        <span class="stat pending" title="Pending"><span class="count">0</span> pending</span>
-        <span class="stat snoozed" title="Snoozed"><span class="count">0</span> snoozed</span>
-        <span class="stat notified" title="Due"><span class="count">0</span> due</span>
+        <span class="stat pending" title="Pending" data-i18n-title="pending"><span class="count">0</span> <span data-i18n="pending">Pending</span></span>
+        <span class="stat snoozed" title="Snoozed" data-i18n-title="snoozed"><span class="count">0</span> <span data-i18n="snoozed">Snoozed</span></span>
+        <span class="stat notified" title="Due" data-i18n-title="due"><span class="count">0</span> <span data-i18n="due">Due</span></span>
         <span class="stat-separator">|</span>
-        <span class="stat completed" title="Completed"><span class="count">0</span> done</span>
-        <span class="stat dismissed" title="Dismissed"><span class="count">0</span> dismissed</span>
+        <span class="stat completed" title="Completed" data-i18n-title="completed"><span class="count">0</span> <span data-i18n="done">Done</span></span>
+        <span class="stat dismissed" title="Dismissed" data-i18n-title="dismissed"><span class="count">0</span> <span data-i18n="dismissed">Dismissed</span></span>
       </div>
     </header>
 
-    <div id="loading" class="loading">Loading...</div>
+    <div id="loading" class="loading" data-i18n="loading">Loading...</div>
 
     <div id="empty-state" class="empty-state hidden">
-      <p>No reminders set</p>
-      <p class="hint">Right-click an email and select "Set Reminder..."</p>
+      <p data-i18n="noReminders">No reminders set</p>
+      <p class="hint" data-i18n="emptyHint">Right-click an email and select "Set Reminder..."</p>
     </div>
 
     <div id="reminders-list" class="reminders-list hidden"></div>
 
     <footer>
-      <button id="viewAllBtn" class="link-btn">View All Reminders</button>
+      <button id="viewAllBtn" class="link-btn" data-i18n="viewAll">View All Reminders</button>
     </footer>
   </div>
 
+  <script src="../i18n.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

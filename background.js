@@ -24,18 +24,34 @@ async function initializeReminderTag() {
     }
 
     const existingTag = tags.find(tag => tag.key === REMINDER_TAG_KEY);
+    const tagName = I18n.message("reminderTag");
+    const { localizedReminderTagName } = await browser.storage.local.get("localizedReminderTagName");
 
     if (!existingTag) {
       // Try the available create API
       if (browser.messages.tags && browser.messages.tags.create) {
-        await browser.messages.tags.create(REMINDER_TAG_KEY, "Has Reminder", REMINDER_TAG_COLOR);
+        await browser.messages.tags.create(REMINDER_TAG_KEY, tagName, REMINDER_TAG_COLOR);
       } else if (browser.messages.createTag) {
-        await browser.messages.createTag(REMINDER_TAG_KEY, "Has Reminder", REMINDER_TAG_COLOR);
+        await browser.messages.createTag(REMINDER_TAG_KEY, tagName, REMINDER_TAG_COLOR);
       } else {
         console.warn("No tag creation API available");
         return;
       }
+    } else if (existingTag.tag !== tagName) {
+      // Upgrade the original English label and follow subsequent locale changes.
+      // Preserve a name the user chose themselves, and never change the tag key/color.
+      if (existingTag.tag !== "Has Reminder" && existingTag.tag !== localizedReminderTagName) {
+        return;
+      }
+      if (browser.messages.tags && browser.messages.tags.update) {
+        await browser.messages.tags.update(REMINDER_TAG_KEY, { tag: tagName });
+      } else if (browser.messages.updateTag) {
+        await browser.messages.updateTag(REMINDER_TAG_KEY, { tag: tagName });
+      } else {
+        return;
+      }
     }
+    await browser.storage.local.set({ localizedReminderTagName: tagName });
   } catch (error) {
     console.error("Error initializing reminder tag:", error);
   }
@@ -182,15 +198,16 @@ async function checkDueReminders() {
 // ============================================================================
 
 async function showReminderNotification(reminder) {
-  const truncatedSubject = reminder.subject.length > 50
-    ? reminder.subject.substring(0, 47) + "..."
-    : reminder.subject;
+  const subject = reminder.subject || I18n.message("noSubject");
+  const truncatedSubject = subject.length > 50
+    ? subject.substring(0, 47) + "..."
+    : subject;
 
   await browser.notifications.create(reminder.id, {
     type: "basic",
     iconUrl: "icons/icon-48.png",
-    title: "Email Reminder",
-    message: `${truncatedSubject}\nFrom: ${reminder.sender}`
+    title: I18n.message("reminderNotificationTitle"),
+    message: `${truncatedSubject}\n${I18n.message("fromSender", reminder.sender || I18n.message("unknownSender"))}`
   });
 }
 
@@ -256,7 +273,7 @@ async function findMessageByHeaderId(headerMessageId) {
 
 browser.menus.create({
   id: "set-reminder",
-  title: "Set Reminder...",
+  title: I18n.message("setReminder"),
   contexts: ["message_list"]
 });
 
@@ -334,7 +351,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       return { success: true };
 
     default:
-      return { error: "Unknown action" };
+      return { error: I18n.message("unknownAction") };
   }
 });
 
@@ -386,7 +403,7 @@ async function updateReminder(id, data) {
   const { reminders = {} } = await browser.storage.local.get("reminders");
 
   if (!reminders[id]) {
-    return { error: "Reminder not found" };
+    return { error: I18n.message("reminderNotFound") };
   }
 
   reminders[id] = {
@@ -407,7 +424,7 @@ async function snoozeReminder(id, minutes) {
   const { reminders = {} } = await browser.storage.local.get("reminders");
 
   if (!reminders[id]) {
-    return { error: "Reminder not found" };
+    return { error: I18n.message("reminderNotFound") };
   }
 
   const newDueDate = new Date();
@@ -428,7 +445,7 @@ async function dismissReminder(id) {
   const { reminders = {} } = await browser.storage.local.get("reminders");
 
   if (!reminders[id]) {
-    return { error: "Reminder not found" };
+    return { error: I18n.message("reminderNotFound") };
   }
 
   const messageId = reminders[id].messageId;
@@ -446,7 +463,7 @@ async function completeReminder(id) {
   const { reminders = {} } = await browser.storage.local.get("reminders");
 
   if (!reminders[id]) {
-    return { error: "Reminder not found" };
+    return { error: I18n.message("reminderNotFound") };
   }
 
   const messageId = reminders[id].messageId;
@@ -465,7 +482,7 @@ async function deleteReminder(id) {
   const { reminders = {} } = await browser.storage.local.get("reminders");
 
   if (!reminders[id]) {
-    return { error: "Reminder not found" };
+    return { error: I18n.message("reminderNotFound") };
   }
 
   const messageId = reminders[id].messageId;

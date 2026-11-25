@@ -134,9 +134,28 @@ Access via **Tools** > **Add-ons and Themes** > **Email Reminders** > **Options*
 git clone https://github.com/gitzone83/thunderbird-reminder-extension.git
 cd thunderbird-reminder-extension
 
-# Create XPI package
-zip -r ../email-reminders.xpi * -x "*.git*" -x "*.md"
+# Validate translations (Node.js 18+)
+node scripts/check-locales.mjs
+node --test tests/i18n.test.cjs
+
+# Create XPI package (Python 3; no runtime dependencies)
+python3 scripts/build-xpi.py
 ```
+
+The package is written to `dist/`. It includes only extension runtime files and
+the license, excluding tests, screenshots, build tools and Git metadata.
+For a separately versioned local build, use `--version 0.3.1.1`.
+Install the XPI through Thunderbird → Add-ons and Themes → gear icon →
+Install Add-on From File.
+
+## Languages
+
+English and Russian are included. The extension follows the Thunderbird UI
+language, with English as the fallback for unsupported languages. Restart
+Thunderbird after changing its UI language. Dates and relative times use the
+UI locale; reminder timestamps and exported data keep their original format.
+
+See [LOCALIZATION.md](LOCALIZATION.md) to add a language or run the UI checks.
 
 ## Project Structure
 

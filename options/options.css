@@ -43,6 +43,7 @@ h1 {
 
 .option-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   margin-bottom: 12px;
@@ -116,6 +117,7 @@ button.danger:hover {
 
 .button-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 16px;
   margin-top: 32px;

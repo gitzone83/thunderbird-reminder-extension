@@ -1,18 +1,446 @@
 {
   "extensionName": {
     "message": "Email Reminders",
-    "description": "Name of the extension"
+    "description": "UI text: extensionName"
   },
   "extensionDescription": {
     "message": "Set reminders for emails with Outlook-style notifications",
-    "description": "Description of the extension"
+    "description": "UI text: extensionDescription"
   },
   "setReminder": {
     "message": "Set Reminder...",
-    "description": "Context menu item text"
+    "description": "UI text: setReminder"
   },
   "reminderNotificationTitle": {
     "message": "Email Reminder",
-    "description": "Title for reminder notifications"
+    "description": "UI text: reminderNotificationTitle"
+  },
+  "saveReminder": {
+    "message": "Set Reminder",
+    "description": "UI text: saveReminder"
+  },
+  "loading": {
+    "message": "Loading...",
+    "description": "UI text: loading"
+  },
+  "loadingReminders": {
+    "message": "Loading reminders...",
+    "description": "UI text: loadingReminders"
+  },
+  "noReminders": {
+    "message": "No reminders set",
+    "description": "UI text: noReminders"
+  },
+  "emptyHint": {
+    "message": "Right-click an email and select \"Set Reminder...\"",
+    "description": "UI text: emptyHint"
+  },
+  "viewAll": {
+    "message": "View All Reminders",
+    "description": "UI text: viewAll"
+  },
+  "emailLabel": {
+    "message": "Email:",
+    "description": "UI text: emailLabel"
+  },
+  "remindOn": {
+    "message": "Remind me on:",
+    "description": "UI text: remindOn"
+  },
+  "inOneHour": {
+    "message": "In 1 hour",
+    "description": "UI text: inOneHour"
+  },
+  "inFourHours": {
+    "message": "In 4 hours",
+    "description": "UI text: inFourHours"
+  },
+  "tomorrowMorning": {
+    "message": "Tomorrow 9am",
+    "description": "UI text: tomorrowMorning"
+  },
+  "nextWeek": {
+    "message": "Next week",
+    "description": "UI text: nextWeek"
+  },
+  "notesLabel": {
+    "message": "Notes (optional):",
+    "description": "UI text: notesLabel"
+  },
+  "notesPlaceholder": {
+    "message": "Add a note to remind yourself why...",
+    "description": "UI text: notesPlaceholder"
+  },
+  "cancel": {
+    "message": "Cancel",
+    "description": "UI text: cancel"
+  },
+  "allRemindersTitle": {
+    "message": "All Reminders - Email Reminders",
+    "description": "UI text: allRemindersTitle"
+  },
+  "activeReminders": {
+    "message": "Active Reminders",
+    "description": "UI text: activeReminders"
+  },
+  "allReminders": {
+    "message": "All Reminders",
+    "description": "UI text: allReminders"
+  },
+  "pending": {
+    "message": "Pending",
+    "description": "UI text: pending"
+  },
+  "snoozed": {
+    "message": "Snoozed",
+    "description": "UI text: snoozed"
+  },
+  "due": {
+    "message": "Due",
+    "description": "UI text: due"
+  },
+  "completed": {
+    "message": "Completed",
+    "description": "UI text: completed"
+  },
+  "dismissed": {
+    "message": "Dismissed",
+    "description": "UI text: dismissed"
+  },
+  "noRemindersFound": {
+    "message": "No reminders found",
+    "description": "UI text: noRemindersFound"
+  },
+  "listEmptyHint": {
+    "message": "Right-click an email in your inbox and select \"Set Reminder...\" to get started.",
+    "description": "UI text: listEmptyHint"
+  },
+  "status": {
+    "message": "Status",
+    "description": "UI text: status"
+  },
+  "subject": {
+    "message": "Subject",
+    "description": "UI text: subject"
+  },
+  "from": {
+    "message": "From",
+    "description": "UI text: from"
+  },
+  "dueColumn": {
+    "message": "Due",
+    "description": "UI text: dueColumn"
+  },
+  "actions": {
+    "message": "Actions",
+    "description": "UI text: actions"
+  },
+  "settingsTitle": {
+    "message": "Email Reminders - Settings",
+    "description": "UI text: settingsTitle"
+  },
+  "settingsHeading": {
+    "message": "Email Reminders Settings",
+    "description": "UI text: settingsHeading"
+  },
+  "notifications": {
+    "message": "Notifications",
+    "description": "UI text: notifications"
+  },
+  "checkInterval": {
+    "message": "Check for due reminders every:",
+    "description": "UI text: checkInterval"
+  },
+  "oneMinute": {
+    "message": "1 minute",
+    "description": "UI text: oneMinute"
+  },
+  "twoMinutes": {
+    "message": "2 minutes",
+    "description": "UI text: twoMinutes"
+  },
+  "fiveMinutes": {
+    "message": "5 minutes",
+    "description": "UI text: fiveMinutes"
+  },
+  "tenMinutes": {
+    "message": "10 minutes",
+    "description": "UI text: tenMinutes"
+  },
+  "fifteenMinutes": {
+    "message": "15 minutes",
+    "description": "UI text: fifteenMinutes"
+  },
+  "oneHour": {
+    "message": "1 hour",
+    "description": "UI text: oneHour"
+  },
+  "fourHours": {
+    "message": "4 hours",
+    "description": "UI text: fourHours"
+  },
+  "oneDay": {
+    "message": "1 day",
+    "description": "UI text: oneDay"
+  },
+  "oneWeek": {
+    "message": "1 week",
+    "description": "UI text: oneWeek"
+  },
+  "tomorrow": {
+    "message": "Tomorrow",
+    "description": "UI text: tomorrow"
+  },
+  "defaultReminderTime": {
+    "message": "Default Reminder Time",
+    "description": "UI text: defaultReminderTime"
+  },
+  "defaultTimeLabel": {
+    "message": "Default time for day-based quick options:",
+    "description": "UI text: defaultTimeLabel"
+  },
+  "inboxBehavior": {
+    "message": "Inbox Behavior",
+    "description": "UI text: inboxBehavior"
+  },
+  "archiveOnReminder": {
+    "message": "Archive email after setting a reminder",
+    "description": "UI text: archiveOnReminder"
+  },
+  "dataManagement": {
+    "message": "Data Management",
+    "description": "UI text: dataManagement"
+  },
+  "exportReminders": {
+    "message": "Export Reminders",
+    "description": "UI text: exportReminders"
+  },
+  "importReminders": {
+    "message": "Import Reminders",
+    "description": "UI text: importReminders"
+  },
+  "clearCompleted": {
+    "message": "Clear Completed Reminders",
+    "description": "UI text: clearCompleted"
+  },
+  "clearAll": {
+    "message": "Clear All Reminders",
+    "description": "UI text: clearAll"
+  },
+  "saveSettings": {
+    "message": "Save Settings",
+    "description": "UI text: saveSettings"
+  },
+  "settingsSaved": {
+    "message": "Settings saved!",
+    "description": "UI text: settingsSaved"
+  },
+  "invalidImport": {
+    "message": "Invalid import file format",
+    "description": "UI text: invalidImport"
+  },
+  "importFailed": {
+    "message": "Could not import reminders. Please check the file and try again.",
+    "description": "UI text: importFailed"
+  },
+  "confirmClearCompleted": {
+    "message": "Are you sure you want to delete all completed and dismissed reminders?",
+    "description": "UI text: confirmClearCompleted"
+  },
+  "confirmClearAll": {
+    "message": "Are you sure you want to delete ALL reminders? This cannot be undone.",
+    "description": "UI text: confirmClearAll"
+  },
+  "confirmClearAllAgain": {
+    "message": "Really delete everything?",
+    "description": "UI text: confirmClearAllAgain"
+  },
+  "completedCleared": {
+    "message": "Completed reminders cleared.",
+    "description": "UI text: completedCleared"
+  },
+  "allCleared": {
+    "message": "All reminders cleared.",
+    "description": "UI text: allCleared"
+  },
+  "loadRemindersError": {
+    "message": "Error loading reminders",
+    "description": "UI text: loadRemindersError"
+  },
+  "noSubject": {
+    "message": "(No subject)",
+    "description": "UI text: noSubject"
+  },
+  "unknownSender": {
+    "message": "Unknown",
+    "description": "UI text: unknownSender"
+  },
+  "loadEmailRetry": {
+    "message": "Could not load email information. Please try again.",
+    "description": "UI text: loadEmailRetry"
+  },
+  "loadEmailError": {
+    "message": "Error loading email information.",
+    "description": "UI text: loadEmailError"
+  },
+  "selectDate": {
+    "message": "Please select a date and time for the reminder.",
+    "description": "UI text: selectDate"
+  },
+  "invalidDate": {
+    "message": "Invalid date. Please select a valid date and time.",
+    "description": "UI text: invalidDate"
+  },
+  "futureDate": {
+    "message": "Please select a future date and time.",
+    "description": "UI text: futureDate"
+  },
+  "emailUnavailable": {
+    "message": "Email information not available. Please close and try again.",
+    "description": "UI text: emailUnavailable"
+  },
+  "saving": {
+    "message": "Saving...",
+    "description": "UI text: saving"
+  },
+  "createFailed": {
+    "message": "Failed to create reminder.",
+    "description": "UI text: createFailed"
+  },
+  "saveFailed": {
+    "message": "Error saving reminder. Please try again.",
+    "description": "UI text: saveFailed"
+  },
+  "openEmail": {
+    "message": "Open Email",
+    "description": "UI text: openEmail"
+  },
+  "open": {
+    "message": "Open",
+    "description": "UI text: open"
+  },
+  "snooze": {
+    "message": "Snooze",
+    "description": "UI text: snooze"
+  },
+  "snoozePrompt": {
+    "message": "Snooze...",
+    "description": "UI text: snoozePrompt"
+  },
+  "done": {
+    "message": "Done",
+    "description": "UI text: done"
+  },
+  "dismiss": {
+    "message": "Dismiss",
+    "description": "UI text: dismiss"
+  },
+  "delete": {
+    "message": "Delete",
+    "description": "UI text: delete"
+  },
+  "reactivate": {
+    "message": "Reactivate",
+    "description": "UI text: reactivate"
+  },
+  "confirmDelete": {
+    "message": "Are you sure you want to delete this reminder?",
+    "description": "UI text: confirmDelete"
+  },
+  "reminderTag": {
+    "message": "Has Reminder",
+    "description": "UI text: reminderTag"
+  },
+  "reminderNotFound": {
+    "message": "Reminder not found",
+    "description": "UI text: reminderNotFound"
+  },
+  "unknownAction": {
+    "message": "Unknown action",
+    "description": "UI text: unknownAction"
+  },
+  "fromSender": {
+    "message": "From: $SENDER$",
+    "description": "UI text: fromSender",
+    "placeholders": {
+      "sender": {
+        "content": "$1",
+        "example": "Alice <alice@example.com>"
+      }
+    }
+  },
+  "overdueAt": {
+    "message": "Overdue: $TIME$",
+    "description": "UI text: overdueAt",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "5 minutes ago"
+      }
+    }
+  },
+  "dueAt": {
+    "message": "Due: $TIME$",
+    "description": "UI text: dueAt",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "Tomorrow at 09:00"
+      }
+    }
+  },
+  "todayAt": {
+    "message": "Today at $TIME$",
+    "description": "UI text: todayAt",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "09:00"
+      }
+    }
+  },
+  "tomorrowAt": {
+    "message": "Tomorrow at $TIME$",
+    "description": "UI text: tomorrowAt",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "09:00"
+      }
+    }
+  },
+  "dateAtTime": {
+    "message": "$DATE$ at $TIME$",
+    "description": "UI text: dateAtTime",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Nov 25"
+      },
+      "time": {
+        "content": "$2",
+        "example": "09:00"
+      }
+    }
+  },
+  "importSuccess": {
+    "message": "Reminders imported: $COUNT$.",
+    "description": "UI text: importSuccess",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "21"
+      }
+    }
+  },
+  "extensionVersion": {
+    "message": "Email Reminders Extension v$VERSION$",
+    "description": "UI text: extensionVersion",
+    "placeholders": {
+      "version": {
+        "content": "$1",
+        "example": "0.3.1"
+      }
+    }
   }
 }

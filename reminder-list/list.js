@@ -4,6 +4,9 @@ let allReminders = [];
 let currentFilter = "active";
 
 document.addEventListener("DOMContentLoaded", async () => {
+  document.getElementById("extensionVersion").textContent = I18n.message(
+    "extensionVersion", browser.runtime.getManifest().version
+  );
   await loadReminders();
   setupFilterListener();
 });
@@ -26,7 +29,7 @@ async function loadReminders() {
     renderReminders();
   } catch (error) {
     console.error("Error loading reminders:", error);
-    loadingEl.textContent = "Error loading reminders";
+    loadingEl.textContent = I18n.message("loadRemindersError");
   }
 }
 
@@ -93,8 +96,8 @@ function createReminderRow(reminder) {
 
   const subjectText = document.createElement("div");
   subjectText.className = "subject-text";
-  subjectText.textContent = reminder.subject;
-  subjectText.title = reminder.subject;
+  subjectText.textContent = reminder.subject || I18n.message("noSubject");
+  subjectText.title = reminder.subject || I18n.message("noSubject");
   subjectCell.appendChild(subjectText);
 
   if (reminder.notes) {
@@ -108,8 +111,8 @@ function createReminderRow(reminder) {
   const senderCell = document.createElement("td");
   const senderText = document.createElement("div");
   senderText.className = "sender-text";
-  senderText.textContent = reminder.sender;
-  senderText.title = reminder.sender;
+  senderText.textContent = reminder.sender || I18n.message("unknownSender");
+  senderText.title = reminder.sender || I18n.message("unknownSender");
   senderCell.appendChild(senderText);
 
   // Due date cell
@@ -118,12 +121,12 @@ function createReminderRow(reminder) {
   dueText.className = "due-text";
   if (isOverdue) {
     dueText.classList.add("overdue");
-    dueText.textContent = `Overdue: ${formatDateTime(dueDate)}`;
+    dueText.textContent = I18n.message("overdueAt", I18n.formatDateTime(dueDate, true));
   } else if (isDueSoon && isActive) {
     dueText.classList.add("due-soon");
-    dueText.textContent = formatDateTime(dueDate);
+    dueText.textContent = I18n.formatDateTime(dueDate, true);
   } else {
-    dueText.textContent = formatDateTime(dueDate);
+    dueText.textContent = I18n.formatDateTime(dueDate, true);
   }
   dueCell.appendChild(dueText);
 
@@ -135,7 +138,7 @@ function createReminderRow(reminder) {
   if (isActive) {
     // Open button
     const openBtn = document.createElement("button");
-    openBtn.textContent = "Open";
+    openBtn.textContent = I18n.message("open");
     openBtn.className = "primary";
     openBtn.addEventListener("click", () => openEmail(reminder.id));
     actionsDiv.appendChild(openBtn);
@@ -143,15 +146,15 @@ function createReminderRow(reminder) {
     // Snooze dropdown
     const snoozeSelect = document.createElement("select");
     snoozeSelect.className = "snooze-select";
-    snoozeSelect.innerHTML = `
-      <option value="">Snooze...</option>
-      <option value="5">5 min</option>
-      <option value="15">15 min</option>
-      <option value="60">1 hour</option>
-      <option value="240">4 hours</option>
-      <option value="1440">1 day</option>
-      <option value="10080">1 week</option>
-    `;
+    for (const [value, key] of [
+      ["", "snoozePrompt"], ["5", "fiveMinutes"], ["15", "fifteenMinutes"],
+      ["60", "oneHour"], ["240", "fourHours"], ["1440", "oneDay"], ["10080", "oneWeek"]
+    ]) {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = I18n.message(key);
+      snoozeSelect.appendChild(option);
+    }
     snoozeSelect.addEventListener("change", async (e) => {
       if (e.target.value) {
         await snoozeReminder(reminder.id, parseInt(e.target.value));
@@ -162,28 +165,28 @@ function createReminderRow(reminder) {
 
     // Complete button
     const completeBtn = document.createElement("button");
-    completeBtn.textContent = "Done";
+    completeBtn.textContent = I18n.message("done");
     completeBtn.className = "success";
     completeBtn.addEventListener("click", () => completeReminder(reminder.id));
     actionsDiv.appendChild(completeBtn);
 
     // Dismiss button
     const dismissBtn = document.createElement("button");
-    dismissBtn.textContent = "Dismiss";
+    dismissBtn.textContent = I18n.message("dismiss");
     dismissBtn.className = "danger";
     dismissBtn.addEventListener("click", () => dismissReminder(reminder.id));
     actionsDiv.appendChild(dismissBtn);
   } else {
     // Delete button for completed/dismissed
     const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
+    deleteBtn.textContent = I18n.message("delete");
     deleteBtn.className = "danger";
     deleteBtn.addEventListener("click", () => deleteReminder(reminder.id));
     actionsDiv.appendChild(deleteBtn);
 
     // Reactivate button
     const reactivateBtn = document.createElement("button");
-    reactivateBtn.textContent = "Reactivate";
+    reactivateBtn.textContent = I18n.message("reactivate");
     reactivateBtn.addEventListener("click", () => reactivateReminder(reminder.id));
     actionsDiv.appendChild(reactivateBtn);
   }
@@ -219,7 +222,7 @@ async function dismissReminder(id) {
 }
 
 async function deleteReminder(id) {
-  if (confirm("Are you sure you want to delete this reminder?")) {
+  if (confirm(I18n.message("confirmDelete"))) {
     await browser.runtime.sendMessage({ action: "deleteReminder", id });
     await loadReminders();
   }
@@ -244,30 +247,11 @@ async function reactivateReminder(id) {
 
 function formatStatus(status) {
   const labels = {
-    pending: "Pending",
-    snoozed: "Snoozed",
-    notified: "Due",
-    completed: "Done",
-    dismissed: "Dismissed"
+    pending: I18n.message("pending"),
+    snoozed: I18n.message("snoozed"),
+    notified: I18n.message("due"),
+    completed: I18n.message("done"),
+    dismissed: I18n.message("dismissed")
   };
   return labels[status] || status;
-}
-
-function formatDateTime(date) {
-  const now = new Date();
-  const isToday = date.toDateString() === now.toDateString();
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const isTomorrow = date.toDateString() === tomorrow.toDateString();
-
-  const timeStr = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  const dateStr = date.toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" });
-
-  if (isToday) {
-    return `Today at ${timeStr}`;
-  } else if (isTomorrow) {
-    return `Tomorrow at ${timeStr}`;
-  } else {
-    return `${dateStr} at ${timeStr}`;
-  }
 }
